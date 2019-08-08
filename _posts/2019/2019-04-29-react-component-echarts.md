@@ -125,7 +125,7 @@ class Exmaple extends Component{
 直观来讲，`Echarts`为配置式开发，主要维护一个`option`就可以了；`React`为组件式开发，对外可接收`props`参数，内部通过`state`控制逻辑，再加上`jsx`来编写页面结构，简直完美！那么，何不以组件式的形式来完成`Echarts`的开发？就像这样：
 
 
-![配置式与组件式对比](//static.dawiwt.com/blog/2019/04/recharts-slogen.png)
+![配置式与组件式对比](https://static.dawiwt.com/blog/2019/04/recharts-slogen.png)
 
 单从行数上来看，已经少了很多，可维护性也更高，将一个庞大的配置对象拆分成一个个属性，开发人员只需要关心可变化的那一部分即可，或通过`state`，或通过`redux`等来存储数据，逻辑一下子清晰了很多，那种熟悉又亲切的感觉找回来了！
 
@@ -209,7 +209,7 @@ export default class BaseComponent extends PureComponent {
 
 伴随着愤怒的键盘敲击与`MacBook`风扇嗡嗡作响的哀嚎声中，为[`react-component-echarts`](https://github.com/dawiwt/react-component-echarts)专门服务的[辅助工具](https://dawiwt.github.io/react-component-echarts/tools.html)应运而生了，它长这个丑样：
 
-![辅助工具](//static.dawiwt.com/blog/2019/04/recharts-tools.png)
+![辅助工具](https://static.dawiwt.com/blog/2019/04/recharts-tools.png)
 
 辅助工具主要由三部分组成：
 
@@ -218,9 +218,9 @@ export default class BaseComponent extends PureComponent {
 - 右下：不可编辑，根据左侧`option`生成组件式图表代码
 
 还有隐藏的第四部分与第五部分，一个是提示替换变量，一个是`option`代码有错误，生成代码失败时会出现，分别是：
-![提示替换变量](//static.dawiwt.com/blog/2019/04/recharts-var.png)
+![提示替换变量](https://static.dawiwt.com/blog/2019/04/recharts-var.png)
 
-![代码有错误](//static.dawiwt.com/blog/2019/04/recharts-error.png)
+![代码有错误](https://static.dawiwt.com/blog/2019/04/recharts-error.png)
 
 代码有错误这个就不用多解释了，检查自己的`option`有什么问题改过来就好了；提示替换变量需要说明一下，好比你从官网示例中复制了一段配置，配置里面某一项的值是取的外部变量，那么这个时候在辅助工具的运行环境是没有这个变量的，生成时就会出错，我在这里做了一个容错处理，发现有变量未定义这种错误时，会自动创建一个同名变量，并且在生成图表代码时，变量以`$varName$`的形式存在，当你发现有这个提示时，只需要把以`$`开头结尾的字符串替换为真实变量就可以了。
 
@@ -238,8 +238,8 @@ export default class BaseComponent extends PureComponent {
 - Example: https://dawiwt.github.io/react-component-echarts
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTU4MjUxODI2NiwxOTIyNzU0Nzc2LDE5Mj
-I3NTQ3NzYsLTEzNDUzMTA0ODcsLTE1MzI4NTUzNDMsLTE2NDU3
-MTMwMzQsNTI0MzE3NzAyLC05NjYxMjc4ODIsMjEyNTc3Mjg4NS
-wtOTY0MzA2NjcyLC0zNTk0NjU1ODldfQ==
+eyJoaXN0b3J5IjpbMTc0NjE1MzU0MCwtNTgyNTE4MjY2LDE5Mj
+I3NTQ3NzYsMTkyMjc1NDc3NiwtMTM0NTMxMDQ4NywtMTUzMjg1
+NTM0MywtMTY0NTcxMzAzNCw1MjQzMTc3MDIsLTk2NjEyNzg4Mi
+wyMTI1NzcyODg1LC05NjQzMDY2NzIsLTM1OTQ2NTU4OV19
 -->
