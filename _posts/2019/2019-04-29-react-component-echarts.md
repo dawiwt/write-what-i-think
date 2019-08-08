@@ -1,0 +1,245 @@
+---
+title: 【React】戏说组件式百度图表的由来及简单逻辑
+date: 2019-04-29 17:50:08
+tags:
+- React
+- Echarts
+- react-component-echarts
+---
+
+> 温馨提示：如果您对`Echarts`与`React`足够了解，并且想直接了当的看组件式百度图表[`react-component-echarts`](https://github.com/dawiwt/react-component-echarts)的解决方案，那么为了不浪费您宝贵的时间，建议您跳过前面的部分，直接从[`解决方案`](#解决方案)部分开始看起。
+
+## 前言
+
+在众多数据可视化产品中，`Echarts`可谓中流砥柱，其功能的强大、灵活在图表界的水平以顶尖来形容，个人感觉一点也不过分；我作为一名前端开发人员，也经常用`Echarts`来解决公司或个人项目中的图表需求，甚是得心应手；不得不说，在我从事研发工作多年以来，还能保持着一头乌黑的短发，`Echarts`有一部分的功劳，我非常感谢她，帮我解决了不少烦恼。
+
+后来，我遇到了`React`，她**声明式**、**组件化**、**一次学习，随处编写**的三大特性一下将我拉向了一个全新的世界，恍惚间我隐约明白，原来世界还能这样运行；我不断的了解着她，每天与她促膝长谈、通力合作，完成了一个又一个项目；是时候了，该向她介绍我的另一位老朋友与她认识了；没错，就是`Echarts`，我觉得大家会很愉快的接纳对方；但，事与愿违。
+
+*我似乎闻到了一丝火药味；是了，她们都是强者，性格各异，我作为中间人，要磨合她们。*
+<!-- more -->
+## Echarts
+
+`Echarts`的工作方式十分简单，你只需要告诉她要什么图表、展示什么数据就可以了，毫秒之间，原本干枯的数据就会变成绘声绘色的可视化图表，让人有一种成就感满满的错觉，就像下面这样：
+
+```javascript
+ const dom = document.getElementById('container')
+ const myChart = echarts.init(dom)
+ const option = {
+            xAxis: {
+                type: 'category',
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                data: [820, 932, 901, 934, 1290, 1330, 1320],
+                type: 'line'
+            }]
+        }
+myChart.setOption(option, true)
+```
+如果将这段代码放在一个完整的`HTML`中，打开浏览器，你会看到一幅美丽的图表，跟下面这张图片一样，而且浏览器中还是带动画的：
+![Basic Line Chart](https://static.dawiwt.com/blog/2019/04/basic-line-chart.png)
+单看一堆数字，很难看清楚他在表达什么，如果将他转换成图表，那么结果就不言而喻了，这就是类`Echarts`库的魅力所在。
+
+## React
+
+在全新的世界中，我着重说一点：**组件化**，这是我喜欢`React`的一大原因；何为组件化？我这里做个不太恰当的比喻：零件；一个机械化的手表，里面由若干个精密的齿轮、发条完美的结合在一起，各自分工，最终都有一个共同的目标：表达时间；我们写组件，就是在做零件，可以自己做，也可以拿别人做好的；再通过自己的加工打磨，组合在一起，就完成了一个目标，最终构成一个复杂的界面；这就是我所理解的，使用`React`最基本、最主要的工作模式。
+
+一个简单的`React`组件就像这样：
+
+```jsx 
+// 显示当前时间
+class DateNow extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            now: Date.now()
+        }
+    }
+    componentDidMount() {
+        setInterval(() => this.setState({ now: Date.now() }), 1000)
+    }
+    render() {
+        const { name } = this.props
+        const { now } = this.state
+        return (
+            <div className="date-now">
+                <p>当前时间：{Date(now)}</p>
+                <p>你好：{name}</p>
+            </div>
+        )
+    }
+}
+// 当前时间：Sun Apr 07 2019 16:30:10 GMT+0800 (中国标准时间)
+// 你好：安妮
+<DateNow name="安妮" />
+```
+这样一个零件就制作好了，哪里使用安哪里。一个设计巧妙的组件，总应该尽可能的发挥它自己的作用，这才是写一个组件的意义，不过现实是，当你前期不遗余力的编写好了很多个组件，考虑了足够多的应用场景，准备在将来一展拳脚，向老板展示自己真正的实力的时候，回过头来才发现，项目...亡了，这是一个足够悲伤又透露着可笑的故事，然而这也是现实中绝大多数项目的一种情况，所以说我们在从头开始做一个项目的时候，真的要好好考虑它的实际情况，一上来就从开山掘石的起点去盖楼是极不明智的，它或许没有那么多的时间来等你做准备工作，其实拿来主义的背后透露着三个字：更可靠；公司的项目能够准时交付、业务线能稳定增长，是需要更成熟的轮子来作为铺垫的，即便你的能力再强、逻辑再缜密、造的轮子零BUG，那也是需要时间的，而往往很多项目来不及等就要黄了，更何况自己赶时间造的轮子漏洞百出；总之，我的看法就是：项目与学习要分清，项目就是要更靠谱，学习才能去造轮子，说难听点，项目不是你练手的地方。
+
+撤远了，这不是咱们现在讨论的主题，谈到组件就由感而发，还请阅者批正；不过话说回来，如果在工作之余，能够造一些基础轮子还是很有必要的，这种轮子不属于任何一类项目，只是很明确的解决一种需求或完成一个基本功能，这是一劳永逸的事情。
+
+再回到正题，咱们接下来的主题是：介绍`Echarts`与`React`成为好朋友，让她们更默契的为大家工作。
+
+## 强行组合
+
+为什么说要让她们更默契呢，这里不得不将她们拉出来让大家看看，为什么我这么说：
+
+```jsx
+class Exmaple extends Component{
+    componentDidMount(){
+        const myChart = echarts.init(this.chartDom)
+        const option = {
+                    xAxis: {
+                        type: 'category',
+                        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [{
+                        data: [820, 932, 901, 934, 1290, 1330, 1320],
+                        type: 'line'
+                    }]
+                }
+        myChart.setOption(option, true)
+    }
+    render(){
+        return (
+            <div ref={chartDom=>this.chartDom=chartDom}/>
+        )
+    }
+}
+```
+这样的代码是能运行，但是`Echart`与`React`基本上是自己干自己的，完全没有要相互靠拢的意思，这还怎么更好的玩耍呢？而且大段的`option`也很难维护，在实际项目中，若干个属性值还是动态数据，比如这里的`series[].data`，万一图表复杂，动态数据更多，如果页面上还有很多其它元素，那最后你就会发现自己写了一坨代码，过后自己都不想再看，更别说让别人维护了；即便把图表相关的代码拿出来另起文件，一样是各玩各的，极不和谐。
+
+有道是：`代码千万行，注释第一行；编码不规范，同事两行泪`，何解呢？
+
+遇到问题总是要解决的，即便测试的小姐姐们以容嬷嬷的步伐缓缓走来、面带蒙娜丽莎般的微笑告诉我：上线吧。但那一坨魔一样存在的代码总是时不时的在我心里冒出来嬉笑自己一番，真真的饭也不香、夜也不眠呐；想办法解决它吧，谁叫咱是有追求的人呢？
+
+*刹那间，妖风四起，天空中滚滚乌云压将下来，我一阵翻云倒海，与那一坨魔一样的代码斗的你死我活，就在我快要支撑不住的时候，忽然感觉右肩一沉，吓的我一个机灵，然后一声低沉的声音入耳：发什么楞呢？呜呼～，原来是自己走火入魔了，不过我已经想到了解决方案。*
+
+## 解决方案
+
+直观来讲，`Echarts`为配置式开发，主要维护一个`option`就可以了；`React`为组件式开发，对外可接收`props`参数，内部通过`state`控制逻辑，再加上`jsx`来编写页面结构，简直完美！那么，何不以组件式的形式来完成`Echarts`的开发？就像这样：
+
+
+![配置式与组件式对比](//static.dawiwt.com/blog/2019/04/recharts-slogen.png)
+
+单从行数上来看，已经少了很多，可维护性也更高，将一个庞大的配置对象拆分成一个个属性，开发人员只需要关心可变化的那一部分即可，或通过`state`，或通过`redux`等来存储数据，逻辑一下子清晰了很多，那种熟悉又亲切的感觉找回来了！
+
+想法是好的，如何实现呢？
+
+将配置与`jsx`仔细一对比会发现，其实它们的结构是相似的，可以说是一至的，`Recharts`可以作为`option`对象本身，那么它的子节点`XAxis`、`YAxis`、`Series`就对应着`option`对象的三个属性，而这三个属性的值在`jsx`上又以`props`的形式来体现，一一对应起来了，简单来说，代码是这样子的：
+```jsx
+import React, { PureComponent } from 'react'
+export default class Recharts extends PureComponent {
+    constructor() {
+        super()
+        this.option = {}
+    }
+    componentDidMount(){
+        this.chart = echarts.init(this.dom, ...)
+        this.chart.setOption(this.option)
+    }
+    render(){
+        const {children} = this.props
+        return (
+            <div ref={dom=>this.dom=dom}>{children}</div>
+        )
+    }
+}
+```
+这里主要做了两件事，一是保存了配置`option`对象，一是创建并初始化了图表，根节点的任务算是完成了大半了，但是这个时候`option`是个空对象，里面什么也没有，图表自然也出不来，它的数据主要来自子节点，那么子节点的任务就很明了了，将接收到的`props`原封不动向上传递，统统砸向父节点就完了。
+
+问题来了，如何向上传递？`React`的特性是自上而下，父节点想给子节点传递数据很简单，通过`props`传就可以了，但是子节点向父节点传呢？只能通过函数来传递了，我也不得不这么做：
+
+``` jsx
+// 根节点
+export default class Recharts extends PureComponent {
+    ...
+    // 接收子节点配置
+    // @name 子节点名称
+    // @option 子节点配置
+    handleReceiveChildOption = (name, option) => {
+        // 进一步处理
+        ...
+    }
+    render(){
+        return (
+            <div ref={dom => (this.dom = dom)}>
+                    {React.Children.map(this.props.children, children => {
+                        if (isValidElement(children)) {
+                            return React.cloneElement(children, {
+                                triggerPushOption: this.handleReceiveChildOption
+                            })
+                        }
+                        return children
+                    })}
+                </div>
+        )
+    }
+}
+
+// 子节点
+export default class BaseComponent extends PureComponent {
+    componentDidMount(){
+        const { triggerPushOption, children, ...props } = this.props
+        if(triggerPushOption) {
+            triggerPushOption(this.name, props)
+        }
+    }
+    render(){
+        return this.props.children
+    }
+}
+```
+这个时候，子节点的任务基本就完成了，它只需要简单的向上传递就可以了，无需再做其它处理，其实这里子节点还需要考虑一种情况就是子节点也有子节点：`<Toolbox><Feature/></Toolbox>`，要处理这种情况很简单，像父节点那样，给`children`传递一个函数，在函数里接收数据，合并后继续向上传递就可以了，这里不再给出代码。
+
+是不是就大功告成了？是的，主要逻辑就是这么简单，`Echarts`本身就很强大，我做的只不过是按需将`jsx`生成`option`并适时创建图表就可以了；当然，实际代码要复杂一些，因为我还考虑了子节点是数组的时候如何处理、容器改变大小时如何`resize`图表、如何合并`option`以达到减少`setOption`操作的目的等等，还有很重要的一点就是，`option`属性虽多，但做为子节点它们的行为都是一致的，我只需要将属性罗列下来，通过数组来扩展`BaseComponent`就可以了，细节逻辑也比较简单，就不在这里细说了，感兴趣的朋友可以看[源码](https://github.com/dawiwt/react-component-echarts/blob/master/src/core/recharts.js)。
+
+## 辅助工具
+
+在我丧心病狂的撸完了代码，心喜若狂的准备大干一番的时候才发现，原来我又给自己制造了一个烦恼，这话怎么说？我相信绝大多数同学在写`Echarts`图表时，一定是从官方示例中找一个跟自己需求类似的图表，将其`option`复制粘贴到自己项目中，再按需改改，一个图表的功能就完成了，快速直接，简直一个字：美！
+
+但是换成`jsx`的写法时...， WTF！我需要将一个个的属性重新写成`jsx`，然后再一个个的把属性值写成`props`，当我把一个比较复杂的图表全部改成组件式后，我的状态是：我是谁？我在哪？我在做什么？如果就此结束，那么[`react-component-echarts`](https://github.com/dawiwt/react-component-echarts)也就没什么作用了，原因三个字：太难用。
+
+*我没有放弃！*
+
+伴随着愤怒的键盘敲击与`MacBook`风扇嗡嗡作响的哀嚎声中，为[`react-component-echarts`](https://github.com/dawiwt/react-component-echarts)专门服务的[辅助工具](https://dawiwt.github.io/react-component-echarts/tools.html)应运而生了，它长这个丑样：
+
+![辅助工具](//static.dawiwt.com/blog/2019/04/recharts-tools.png)
+
+辅助工具主要由三部分组成：
+
+- 左侧：可编辑，此处粘贴自己的`option`
+- 右上：不可编辑，根据左侧`option`生成所依赖的组件
+- 右下：不可编辑，根据左侧`option`生成组件式图表代码
+
+还有隐藏的第四部分与第五部分，一个是提示替换变量，一个是`option`代码有错误，生成代码失败时会出现，分别是：
+![提示替换变量](//static.dawiwt.com/blog/2019/04/recharts-var.png)
+
+![代码有错误](//static.dawiwt.com/blog/2019/04/recharts-error.png)
+
+代码有错误这个就不用多解释了，检查自己的`option`有什么问题改过来就好了；提示替换变量需要说明一下，好比你从官网示例中复制了一段配置，配置里面某一项的值是取的外部变量，那么这个时候在辅助工具的运行环境是没有这个变量的，生成时就会出错，我在这里做了一个容错处理，发现有变量未定义这种错误时，会自动创建一个同名变量，并且在生成图表代码时，变量以`$varName$`的形式存在，当你发现有这个提示时，只需要把以`$`开头结尾的字符串替换为真实变量就可以了。
+
+*从此，`Echarts`与`React`终于愉快的生活，哦不，愉快的工作在一起了。*
+
+## 后记
+
+本人水平有限，文笔有限，以上文字还请海涵；另外，如果发现[`react-component-echarts`](https://github.com/dawiwt/react-component-echarts)逻辑有什么问题或者有什么更好的建议，还请明示，非常感谢！
+
+**React Component Echarts 相关链接 (给个 Star 呗)：**
+
+- GitHub: https://github.com/dawiwt/react-component-echarts
+- Npm: https://www.npmjs.com/package/react-component-echarts
+- Tool: https://dawiwt.github.io/react-component-echarts/tools.html
+- Example: https://dawiwt.github.io/react-component-echarts
+
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbLTU4MjUxODI2NiwxOTIyNzU0Nzc2LDE5Mj
+I3NTQ3NzYsLTEzNDUzMTA0ODcsLTE1MzI4NTUzNDMsLTE2NDU3
+MTMwMzQsNTI0MzE3NzAyLC05NjYxMjc4ODIsMjEyNTc3Mjg4NS
+wtOTY0MzA2NjcyLC0zNTk0NjU1ODldfQ==
+-->
