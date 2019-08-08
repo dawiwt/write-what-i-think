@@ -1,5 +1,6 @@
 ---
 title: webassembly
+id: webassembly
 tags:
 
 ---
