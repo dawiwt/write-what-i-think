@@ -4,9 +4,10 @@ id: lit-html
 tags:
 - 源码解析
 ---
+由于前端三大主流框架R
 
-> 一个用于JavaScript的高效、有表现力、可扩展的HTML模板库。
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNjUwMTk0MDU5LC03ODA3Njk4NDVdfQ==
+eyJoaXN0b3J5IjpbMTY1MTA4MjIyOCw2NTAxOTQwNTksLTc4MD
+c2OTg0NV19
 -->
