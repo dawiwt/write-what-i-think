@@ -8,7 +8,7 @@ tags:
 
 前些天发现了一个叫[`lit-html`](https://github.com/Polymer/lit-html)的库，感觉挺不错，就学习了一番。
 
-网页开发难免会有`DOM`操作，浏览器本身的API
+网页开发难免会有`DOM`操作，而浏览器本身的API不易维护，
 
 
 
@@ -27,7 +27,7 @@ tags:
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE4NTExMDA3MTksNTAwNDk5NTUxLC00Mj
+eyJoaXN0b3J5IjpbLTEyOTY1NDEwMzMsNTAwNDk5NTUxLC00Mj
 EyNTAyMTQsLTM0OTk2MzI3MSwtMTkzNzQwODQyNSw2NTAxOTQw
 NTksLTc4MDc2OTg0NV19
 -->
